@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-[#f0f4f2]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniSync UACh - Plataforma Académica Institucional</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: EB Garamond and Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        uach: {
+                            green: '#00693e',
+                            'green-dark': '#004d2e',
+                            'green-light': '#e6f0ec',
+                            red: '#c20430',
+                            'red-light': '#fbe8ec',
+                            blue: '#c0ddea',
+                            yellow: '#ffc82e',
+                            dark: '#1d1d1b',
+                            gray: '#878787',
+                            bg: '#f0f4f2'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['EB Garamond', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar styling */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #00693e;
+        }
+        
+        .pulse-subtle {
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0%, 100% { border-color: #c20430; }
+            50% { border-color: #f87171; }
+        }
+    </style>
+</head>
+<body class="h-full font-sans text-uach-dark bg-uach-bg flex flex-col antialiased selection:bg-uach-green selection:text-white">
+
+    <!-- HEADER INSTITUCIONAL UACH -->
+    <header class="bg-uach-green text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Branding UACh con Escudo -->
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <div class="bg-white p-2 rounded-lg shadow-inner flex items-center justify-center shrink-0">
+                        <!-- Escudo UACh SVG -->
+                        <svg class="w-9 h-11" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100" height="120" rx="8" fill="white"/>
+                            <path d="M10 10 H90 V110 H10 Z" stroke="#00693e" stroke-width="4" fill="none"/>
+                            <line x1="50" y1="10" x2="50" y2="110" stroke="#00693e" stroke-width="3"/>
+                            <line x1="10" y1="60" x2="90" y2="60" stroke="#00693e" stroke-width="3"/>
+                            <circle cx="30" cy="35" r="14" fill="#00693e" opacity="0.8"/>
+                            <rect x="28" y="42" width="4" height="10" fill="#004d2e"/>
+                            <rect x="65" y="25" width="12" height="25" fill="#c20430"/>
+                            <ellipse cx="25" cy="85" rx="8" ry="5" fill="#ffc82e"/>
+                            <ellipse cx="38" cy="88" rx="7" ry="4" fill="#ffc82e"/>
+                            <circle cx="60" cy="75" r="2" fill="#1d1d1b"/>
+                            <circle cx="70" cy="75" r="2" fill="#1d1d1b"/>
+                            <circle cx="80" cy="75" r="2" fill="#1d1d1b"/>
+                            <circle cx="65" cy="85" r="2" fill="#1d1d1b"/>
+                            <circle cx="75" cy="85" r="2" fill="#1d1d1b"/>
+                            <circle cx="70" cy="95" r="2" fill="#1d1d1b"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-serif italic text-xs tracking-wider text-uach-yellow font-semibold">LIBERTAS CAPITUR</span>
+                            <span class="text-[11px] text-uach-blue hidden sm:inline">&bull; Conocimiento y Naturaleza</span>
+                        </div>
+                        <h1 class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight">Universidad Austral de Chile</h1>
+                        <p class="text-xs font-light text-slate-200 tracking-wide">Plataforma Académica Unificada &bull; <span class="text-uach-yellow font-semibold">Valdivia, Chile</span></p>
+                    </div>
+                </div>
+
+                <!-- Estado del Sistema y Perfil Usuario -->
+                <div class="flex items-center space-x-3">
+                    <div class="hidden md:flex items-center space-x-2 bg-uach-green-dark border border-emerald-600/40 px-3 py-1.5 rounded-lg text-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-emerald-100 font-medium">Semestre 2026-1 Activo</span>
+                    </div>
+
+                    <div id="user-badge" class="bg-white/10 hover:bg-white/20 transition px-3 py-1.5 rounded-lg text-xs flex items-center space-x-2 border border-white/20">
+                        <i class="fa-solid fa-user-circle text-uach-yellow text-sm"></i>
+                        <span id="user-display-name" class="font-semibold text-white">Estudiante UACh</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role Selector Nav Tabs -->
+        <nav class="bg-uach-green-dark border-t border-emerald-700/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-2 py-1.5">
+                    <button id="role-btn-student" onclick="setRole('student')" class="role-btn active text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-md text-white bg-uach-green border-b-2 border-uach-yellow transition flex items-center space-x-2 shadow-sm">
+                        <i class="fa-solid fa-graduation-cap text-uach-yellow"></i>
+                        <span>Panel Estudiante</span>
+                    </button>
+                    <button id="role-btn-professor" onclick="setRole('professor')" class="role-btn text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-md text-slate-200 hover:text-white hover:bg-uach-green/50 transition flex items-center space-x-2">
+                        <i class="fa-solid fa-chalkboard-user text-emerald-300"></i>
+                        <span>Panel Profesor / Docente</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- NOTIFICATION ALERT CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 max-w-md w-full px-4 pointer-events-none"></div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ========================================================= -->
+        <!-- PANEL 1: INTERFAZ ESTUDIANTE                             -->
+        <!-- ========================================================= -->
+        <section id="panel-student" class="space-y-6">
+
+            <!-- Banner Alerta Colisión Horaria (Oculto si no hay topes) -->
+            <div id="collision-alert" class="hidden bg-uach-red-light border-2 border-uach-red rounded-xl p-4 text-uach-dark shadow-md pulse-subtle">
+                <div class="flex items-start space-x-3">
+                    <div class="p-2 bg-uach-red text-white rounded-lg shrink-0">
+                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-uach-red text-sm uppercase tracking-wide">¡Tope de Horario Detectado en Simulador!</h3>
+                        <p id="collision-message" class="text-xs text-slate-700 mt-0.5 leading-relaxed">
+                            Existen asignaturas seleccionadas que se superponen en el mismo bloque horaria.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grilla Principal: Catálogo de Cursos + Horario Semanal -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Columna Izquierda: Buscador e Inscripción de Asignaturas (5 cols) -->
+                <div class="lg:col-span-5 space-y-5">
+                    
+                    <!-- Search Card -->
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h2 class="font-serif font-bold text-lg text-uach-dark flex items-center gap-2">
+                                <i class="fa-solid fa-book-open text-uach-green"></i> Catálogo de Asignaturas
+                            </h2>
+                            <span id="selected-count" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-uach-green-light text-uach-green">
+                                0 Cursos
+                            </span>
+                        </div>
+                        
+                        <!-- Filter Inputs -->
+                        <div class="space-y-2 mb-4">
+                            <div class="relative">
+                                <input type="text" id="course-search-input" oninput="renderCourseCatalog()" placeholder="Buscar por nombre o código (ej: Álgebra, CAL1)..." class="w-full text-xs pl-8 pr-3 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-uach-green text-slate-800">
+                                <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-slate-400 text-xs"></i>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <select id="day-filter" onchange="renderCourseCatalog()" class="w-1/2 text-xs p-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green bg-white text-slate-700">
+                                    <option value="">Todos los días</option>
+                                    <option value="Lunes">Lunes</option>
+                                    <option value="Martes">Martes</option>
+                                    <option value="Miércoles">Miércoles</option>
+                                    <option value="Jueves">Jueves</option>
+                                    <option value="Viernes">Viernes</option>
+                                </select>
+                                <button onclick="resetStudentDraft()" class="w-1/2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-lg font-medium transition flex items-center justify-center gap-1 border border-slate-200">
+                                    <i class="fa-solid fa-rotate-left"></i> Limpiar Selección
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Course List Scrollable -->
+                        <div id="course-catalog-list" class="space-y-3 max-h-[420px] overflow-y-auto custom-scrollbar pr-1">
+                            <!-- Dynamic Content -->
+                        </div>
+
+                        <!-- Action Button: Inscribir Borrador -->
+                        <div class="mt-4 pt-3 border-t border-slate-100">
+                            <button id="btn-submit-draft" onclick="submitScheduleDraft()" class="w-full bg-uach-green hover:bg-uach-green-dark text-white font-bold text-xs py-3 rounded-lg shadow-md hover:shadow-lg transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-cloud-arrow-up text-uach-yellow"></i>
+                                <span>Inscribir Borrador de Horarios</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Consultar Mis Notas Card -->
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="font-serif font-bold text-base text-uach-dark mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-check text-uach-green"></i> Consulta de Notas y Histórico
+                        </h3>
+                        
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="rut-grade-input" placeholder="Ingrese RUT (ej: 20.123.456-7)" value="20.123.456-7" class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green">
+                            <button onclick="lookupStudentGrades()" class="bg-uach-green text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-uach-green-dark transition shrink-0">
+                                Consultar
+                            </button>
+                        </div>
+
+                        <div id="grades-result-container" class="space-y-2 text-xs">
+                            <p class="text-slate-400 italic text-center py-2">Ingrese RUT para desplegar evaluaciones cargadas.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Columna Derecha: Horario Semanal Grid (7 cols) -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+                            <div>
+                                <h2 class="font-serif font-bold text-lg text-uach-dark">Simulador de Horario Semanal</h2>
+                                <p class="text-xs text-slate-500">Visualización de bloques seleccionados para el semestre en curso.</p>
+                            </div>
+                            <div class="flex items-center space-x-2 text-[11px]">
+                                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-uach-green inline-block"></span> Inscrito</span>
+                                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-uach-red inline-block"></span> Tope/Colisión</span>
+                            </div>
+                        </div>
+
+                        <!-- Schedule Grid Table -->
+                        <div class="overflow-x-auto flex-1 custom-scrollbar">
+                            <table class="w-full text-center border-collapse min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-slate-100 text-uach-dark text-xs font-bold border-b border-slate-200">
+                                        <th class="py-2.5 px-1 w-16 text-slate-500">Bloque</th>
+                                        <th class="py-2.5 px-1">Lunes</th>
+                                        <th class="py-2.5 px-1">Martes</th>
+                                        <th class="py-2.5 px-1">Miércoles</th>
+                                        <th class="py-2.5 px-1">Jueves</th>
+                                        <th class="py-2.5 px-1">Viernes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="schedule-grid-body" class="text-xs divide-y divide-slate-100">
+                                    <!-- Dynamic Rows Generated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- PANEL 2: INTERFAZ PROFESOR / DOCENTE                      -->
+        <!-- ========================================================= -->
+        <section id="panel-professor" class="hidden space-y-6">
+
+            <!-- Title & Top Info -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-serif text-2xl font-bold text-uach-dark">Gestión Académica y Docencia</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Creación de secciones, asignación de aulas, aforo y carga oficial de calificaciones.</p>
+                </div>
+                <div class="bg-uach-green-light border border-emerald-200 p-3 rounded-lg flex items-center space-x-3 text-xs">
+                    <i class="fa-solid fa-circle-check text-uach-green text-lg"></i>
+                    <div>
+                        <strong class="font-semibold text-uach-green block">Sincronización en Tiempo Real</strong>
+                        <span class="text-slate-600">Los cambios realizados aquí se reflejan de inmediato en el catálogo estudiantil.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layout Forms + Active Sections Table -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Left Forms Column (5 cols) -->
+                <div class="lg:col-span-5 space-y-6">
+                    
+                    <!-- Form 1: Proponer Nueva Sección -->
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <h3 class="font-serif font-bold text-base text-uach-dark pb-2 border-b border-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-plus-circle text-uach-green"></i> Proponer / Crear Nueva Sección
+                        </h3>
+
+                        <form id="form-create-section" onsubmit="handleCreateSection(event)" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Nombre de la Asignatura</label>
+                                <input type="text" id="sec-name" required placeholder="Ej: Microeconomía I" class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Código / Sección</label>
+                                    <input type="text" id="sec-code" required placeholder="Ej: ECO101-1" class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Aforo Máximo</label>
+                                    <input type="number" id="sec-capacity" required min="5" max="100" value="35" class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Día de Impartición</label>
+                                    <select id="sec-day" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green bg-white">
+                                        <option value="Lunes">Lunes</option>
+                                        <option value="Martes">Martes</option>
+                                        <option value="Miércoles">Miércoles</option>
+                                        <option value="Jueves">Jueves</option>
+                                        <option value="Viernes">Viernes</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Bloque Horario</label>
+                                    <select id="sec-slot" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green bg-white">
+                                        <option value="08:15 - 09:45">08:15 - 09:45</option>
+                                        <option value="10:00 - 11:30">10:00 - 11:30</option>
+                                        <option value="11:45 - 13:15">11:45 - 13:15</option>
+                                        <option value="14:30 - 16:00">14:30 - 16:00</option>
+                                        <option value="16:15 - 17:45">16:15 - 17:45</option>
+                                        <option value="18:00 - 19:30">18:00 - 19:30</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Sala / Aula Asignada</label>
+                                <input type="text" id="sec-room" required placeholder="Ej: San Luis 201 / Pabellón E-2" class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green">
+                            </div>
+
+                            <button type="submit" class="w-full bg-uach-green hover:bg-uach-green-dark text-white font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane text-uach-yellow"></i> Publicar Sección Activa
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Form 2: Carga de Calificaciones -->
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <h3 class="font-serif font-bold text-base text-uach-dark pb-2 border-b border-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-file-pen text-uach-green"></i> Cargar Calificación Estudiantil
+                        </h3>
+
+                        <form id="form-upload-grade" onsubmit="handleUploadGrade(event)" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">RUT Estudiante</label>
+                                <input type="text" id="grade-rut" required placeholder="20.123.456-7" value="20.123.456-7" class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Asignatura</label>
+                                    <select id="grade-course-select" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green bg-white">
+                                        <!-- Dynamic load -->
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Evaluación</label>
+                                    <input type="text" id="grade-eval-name" required placeholder="Ej: Prueba 1 / Solemnel" class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Ponderación (%)</label>
+                                    <input type="number" id="grade-weight" required min="5" max="100" value="25" class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Nota (1.0 a 7.0)</label>
+                                    <input type="number" id="grade-val" required min="1.0" max="7.0" step="0.1" value="5.8" class="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-uach-green font-bold text-uach-green">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-slate-800 hover:bg-uach-dark text-white font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-floppy-disk text-uach-yellow"></i> Registrar Nota en Sistema
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <!-- Right Active Sections Manager (7 cols) -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+                            <div>
+                                <h3 class="font-serif font-bold text-lg text-uach-dark">Secciones Activas e Ocupación de Aulas</h3>
+                                <p class="text-xs text-slate-500">Listado de cupos asignados y ocupación en tiempo real.</p>
+                            </div>
+                            <span id="active-sections-badge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-uach-green">
+                                0 Secciones
+                            </span>
+                        </div>
+
+                        <!-- Active Sections Table -->
+                        <div class="overflow-x-auto flex-1 custom-scrollbar">
+                            <table class="w-full text-left border-collapse min-w-[550px]">
+                                <thead>
+                                    <tr class="bg-slate-100 text-uach-dark text-xs font-bold border-b border-slate-200">
+                                        <th class="py-2.5 px-3">Código & Curso</th>
+                                        <th class="py-2.5 px-2">Horario & Sala</th>
+                                        <th class="py-2.5 px-2">Aforo / Ocupación</th>
+                                        <th class="py-2.5 px-2 text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="professor-sections-tbody" class="text-xs divide-y divide-slate-100">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER INSTITUCIONAL UACH -->
+    <footer class="bg-uach-dark text-white border-t-4 border-uach-green mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded bg-uach-green flex items-center justify-center font-serif font-bold text-uach-yellow text-base">
+                        U
+                    </div>
+                    <div>
+                        <p class="font-bold text-white">Universidad Austral de Chile</p>
+                        <p class="text-slate-400 text-[11px]">Sistema UniSync &bull; Gestión Académica Integrada</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4 text-slate-300 text-[11px]">
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-shield-halved text-uach-green"></i> Portal Seguro</span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-building-columns text-uach-yellow"></i> Valdivia &bull; Puerto Montt &bull; Patagonia</span>
+                </div>
+
+                <div class="text-slate-500 text-[11px]">
+                    &copy; 2026 UACh. Todos los derechos reservados.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // =========================================================
+        // DATA STATE & STUBS
+        // =========================================================
+
+        const TIME_SLOTS = [
+            "08:15 - 09:45",
+            "10:00 - 11:30",
+            "11:45 - 13:15",
+            "14:30 - 16:00",
+            "16:15 - 17:45",
+            "18:00 - 19:30"
+        ];
+
+        const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+
+        // Master Courses & Sections Store
+        let coursesDatabase = [
+            { id: 101, code: "ALG101-1", name: "Álgebra para los Pros", day: "Lunes", timeSlot: "08:15 - 09:45", room: "Pabellón E-101", enrolled: 28, capacity: 35, instructor: "Dr. Roberto Silva" },
+            { id: 102, code: "CAL101-1", name: "Cálculo I", day: "Lunes", timeSlot: "10:00 - 11:30", room: "San Luis 201", enrolled: 32, capacity: 40, instructor: "Dra. Maria Fuentes" },
+            { id: 103, code: "CAL101-2", name: "Cálculo I (Sección 2)", day: "Lunes", timeSlot: "08:15 - 09:45", room: "San Luis 202", enrolled: 15, capacity: 35, instructor: "Prof. Carlos Vega" }, // Potential collision with ALG101-1
+            { id: 104, code: "ECO201-1", name: "Microeconomía I", day: "Martes", timeSlot: "11:45 - 13:15", room: "FACEA 104", enrolled: 22, capacity: 30, instructor: "Dr. Jorge Mendoza" },
+            { id: 105, code: "MKT301-1", name: "Marketing Digital", day: "Miércoles", timeSlot: "14:30 - 16:00", room: "Lab Computación 2", enrolled: 25, capacity: 25, instructor: "Mg. Andrea Ruiz" },
+            { id: 106, code: "FIS102-1", name: "Física General", day: "Jueves", timeSlot: "10:00 - 11:30", room: "Pabellón F-3", enrolled: 18, capacity: 30, instructor: "Dr. Hernán Gómez" },
+            { id: 107, code: "EST101-1", name: "Estadística Aplicada", day: "Viernes", timeSlot: "08:15 - 09:45", room: "Audit. Larraín", enrolled: 30, capacity: 35, instructor: "Dra. Patricia Reyes" }
+        ];
+
+        // Student Selected Course IDs
+        let selectedCourseIds = [101, 102, 104]; // Initial default selection
+
+        // Student Grades Database Store
+        let studentGradesStore = [
+            { rut: "20.123.456-7", courseName: "Álgebra para los Pros", evalName: "Prueba Parcial 1", weight: 30, grade: 6.2 },
+            { rut: "20.123.456-7", courseName: "Álgebra para los Pros", evalName: "Controles Acumulativos", weight: 20, grade: 5.8 },
+            { rut: "20.123.456-7", courseName: "Cálculo I", evalName: "Solemne 1", weight: 35, grade: 4.5 },
+            { rut: "20.123.456-7", courseName: "Microeconomía I", evalName: "Caso Práctico", weight: 25, grade: 6.8 }
+        ];
+
+        let currentRole = 'student';
+
+        // =========================================================
+        // INITIALIZATION & ROLE SWITCHING
+        // =========================================================
+
+        window.onload = function() {
+            renderStudentView();
+            renderProfessorView();
+            lookupStudentGrades();
+        };
+
+        function setRole(role) {
+            currentRole = role;
+            const studentPanel = document.getElementById('panel-student');
+            const professorPanel = document.getElementById('panel-professor');
+            const btnStudent = document.getElementById('role-btn-student');
+            const btnProfessor = document.getElementById('role-btn-professor');
+            const userDisplay = document.getElementById('user-display-name');
+
+            if (role === 'student') {
+                studentPanel.classList.remove('hidden');
+                professorPanel.classList.add('hidden');
+
+                btnStudent.className = "role-btn active text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-md text-white bg-uach-green border-b-2 border-uach-yellow transition flex items-center space-x-2 shadow-sm";
+                btnProfessor.className = "role-btn text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-md text-slate-200 hover:text-white hover:bg-uach-green/50 transition flex items-center space-x-2";
+                userDisplay.innerText = "Estudiante UACh";
+            } else {
+                studentPanel.classList.add('hidden');
+                professorPanel.classList.remove('hidden');
+
+                btnProfessor.className = "role-btn active text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-md text-white bg-uach-green border-b-2 border-uach-yellow transition flex items-center space-x-2 shadow-sm";
+                btnStudent.className = "role-btn text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-md text-slate-200 hover:text-white hover:bg-uach-green/50 transition flex items-center space-x-2";
+                userDisplay.innerText = "Profesor / Docente UACh";
+            }
+        }
+
+        // =========================================================
+        // FEATURE 1: STUDENT INTERFACE & COLLISION LOGIC
+        // =========================================================
+
+        function renderStudentView() {
+            renderCourseCatalog();
+            renderScheduleGrid();
+        }
+
+        function renderCourseCatalog() {
+            const listContainer = document.getElementById('course-catalog-list');
+            const searchVal = document.getElementById('course-search-input').value.toLowerCase();
+            const dayFilterVal = document.getElementById('day-filter').value;
+            const countBadge = document.getElementById('selected-count');
+
+            countBadge.innerText = `${selectedCourseIds.length} Seleccionado(s)`;
+
+            const filteredCourses = coursesDatabase.filter(c => {
+                const matchesSearch = c.name.toLowerCase().includes(searchVal) || c.code.toLowerCase().includes(searchVal);
+                const matchesDay = dayFilterVal === "" || c.day === dayFilterVal;
+                return matchesSearch && matchesDay;
+            });
+
+            if (filteredCourses.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 text-xs">
+                        <i class="fa-solid fa-filter-circle-xmark text-2xl mb-1 block"></i>
+                        No se encontraron asignaturas con los filtros aplicados.
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = filteredCourses.map(course => {
+                const isSelected = selectedCourseIds.includes(course.id);
+                return `
+                    <div class="p-3.5 rounded-lg border transition ${isSelected ? 'border-uach-green bg-uach-green-light/40 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-uach-dark border border-slate-200">${course.code}</span>
+                                <h4 class="font-bold text-xs text-slate-800 mt-1">${course.name}</h4>
+                            </div>
+                            <button onclick="toggleSelectCourse(${course.id})" class="px-2.5 py-1 rounded text-xs font-semibold transition shrink-0 flex items-center gap-1 ${isSelected ? 'bg-uach-red text-white hover:bg-red-700' : 'bg-uach-green text-white hover:bg-uach-green-dark'}">
+                                <i class="fa-solid ${isSelected ? 'fa-minus' : 'fa-plus'} text-[10px]"></i>
+                                ${isSelected ? 'Quitar' : 'Seleccionar'}
+                            </button>
+                        </div>
+
+                        <div class="mt-2 text-[11px] text-slate-600 grid grid-cols-2 gap-1 pt-2 border-t border-slate-100">
+                            <div><i class="fa-regular fa-calendar text-uach-green w-3.5"></i> ${course.day}</div>
+                            <div><i class="fa-regular fa-clock text-uach-green w-3.5"></i> ${course.timeSlot}</div>
+                            <div><i class="fa-solid fa-location-dot text-uach-green w-3.5"></i> ${course.room}</div>
+                            <div><i class="fa-solid fa-users text-uach-green w-3.5"></i> ${course.enrolled}/${course.capacity} cupos</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleSelectCourse(courseId) {
+            const index = selectedCourseIds.indexOf(courseId);
+            if (index > -1) {
+                selectedCourseIds.splice(index, 1);
+            } else {
+                selectedCourseIds.push(courseId);
+            }
+            renderStudentView();
+        }
+
+        function resetStudentDraft() {
+            selectedCourseIds = [];
+            renderStudentView();
+            showToast("Borrador de horarios reiniciado.", "info");
+        }
+
+        function detectCollisions() {
+            const selectedCourses = coursesDatabase.filter(c => selectedCourseIds.includes(c.id));
+            const collisions = [];
+
+            // Compare each pair of selected courses
+            for (let i = 0; i < selectedCourses.length; i++) {
+                for (let j = i + 1; j < selectedCourses.length; j++) {
+                    const c1 = selectedCourses[i];
+                    const c2 = selectedCourses[j];
+
+                    if (c1.day === c2.day && c1.timeSlot === c2.timeSlot) {
+                        collisions.push({ c1, c2 });
+                    }
+                }
+            }
+            return collisions;
+        }
+
+        function renderScheduleGrid() {
+            const tbody = document.getElementById('schedule-grid-body');
+            const alertBox = document.getElementById('collision-alert');
+            const alertMsg = document.getElementById('collision-message');
+
+            const selectedCourses = coursesDatabase.filter(c => selectedCourseIds.includes(c.id));
+            const collisions = detectCollisions();
+
+            // Toggle Collision Warning Banner
+            if (collisions.length > 0) {
+                alertBox.classList.remove('hidden');
+                const clashDetails = collisions.map(col => `<b>${col.c1.name} (${col.c1.code})</b> y <b>${col.c2.name} (${col.c2.code})</b> el ${col.c1.day} en el bloque ${col.c1.timeSlot}`).join('<br>&bull; ');
+                alertMsg.innerHTML = `Conflictos hallados:<br>&bull; ${clashDetails}`;
+            } else {
+                alertBox.classList.add('hidden');
+            }
+
+            // Build Matrix for Slots vs Days
+            tbody.innerHTML = TIME_SLOTS.map(slot => {
+                let rowHtml = `<tr class="hover:bg-slate-50 transition"><td class="py-3 px-1 font-semibold text-slate-500 bg-slate-50/50 text-[11px] border-r border-slate-200">${slot}</td>`;
+
+                DAYS.forEach(day => {
+                    const matches = selectedCourses.filter(c => c.day === day && c.timeSlot === slot);
+
+                    if (matches.length === 0) {
+                        rowHtml += `<td class="py-2 px-1 border border-slate-100 text-slate-300 text-[10px]">-</td>`;
+                    } else if (matches.length === 1) {
+                        const course = matches[0];
+                        rowHtml += `
+                            <td class="p-1 border border-slate-200">
+                                <div class="bg-uach-green text-white p-2 rounded text-left shadow-sm relative group">
+                                    <div class="font-bold text-[10px] leading-tight truncate">${course.name}</div>
+                                    <div class="text-[9px] text-emerald-200 mt-0.5 truncate">${course.code} &bull; ${course.room}</div>
+                                    <button onclick="toggleSelectCourse(${course.id})" class="absolute right-1 top-1 text-slate-300 hover:text-white opacity-0 group-hover:opacity-100 transition">
+                                        <i class="fa-solid fa-xmark text-xs"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                    } else {
+                        // COLLISION STATE (2+ courses)
+                        const names = matches.map(m => m.code).join(' & ');
+                        rowHtml += `
+                            <td class="p-1 border border-uach-red">
+                                <div class="bg-uach-red text-white p-2 rounded text-left shadow-md animate-pulse">
+                                    <div class="font-bold text-[10px] leading-tight flex items-center justify-between">
+                                        <span>TOPE DE HORARIO</span>
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                    <div class="text-[9px] text-red-100 mt-0.5 font-semibold">${names}</div>
+                                </div>
+                            </td>
+                        `;
+                    }
+                });
+
+                rowHtml += `</tr>`;
+                return rowHtml;
+            }).join('');
+        }
+
+        function submitScheduleDraft() {
+            const collisions = detectCollisions();
+            if (selectedCourseIds.length === 0) {
+                showToast("Por favor seleccione al menos una asignatura para inscribir.", "warning");
+                return;
+            }
+            if (collisions.length > 0) {
+                showToast("No se puede inscribir: Resuelva los topes de horario en rojo antes de continuar.", "error");
+                return;
+            }
+
+            showToast("¡Borrador de horario inscrito correctamente en el sistema UACh!", "success");
+        }
+
+        function lookupStudentGrades() {
+            const rut = document.getElementById('rut-grade-input').value.trim();
+            const container = document.getElementById('grades-result-container');
+
+            const filtered = studentGradesStore.filter(g => g.rut === rut);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-slate-400 italic text-center py-3">No existen registros de calificaciones para el RUT ingresado.</div>`;
+                return;
+            }
+
+            // Group by course
+            const grouped = {};
+            filtered.forEach(item => {
+                if (!grouped[item.courseName]) grouped[item.courseName] = [];
+                grouped[item.courseName].push(item);
+            });
+
+            let html = '';
+            for (const courseName in grouped) {
+                const evalList = grouped[courseName];
+                let weightedSum = 0;
+                let totalWeight = 0;
+
+                evalList.forEach(e => {
+                    weightedSum += e.grade * (e.weight / 100);
+                    totalWeight += e.weight;
+                });
+
+                const average = weightedSum.toFixed(1);
+                const isPassing = average >= 4.0;
+
+                html += `
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-1.5">
+                        <div class="flex justify-between items-center pb-1 border-b border-slate-200">
+                            <strong class="font-bold text-slate-800">${courseName}</strong>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isPassing ? 'bg-emerald-100 text-uach-green' : 'bg-red-100 text-uach-red'}">
+                                Promedio: ${average}
+                            </span>
+                        </div>
+                        <div class="space-y-1">
+                            ${evalList.map(ev => `
+                                <div class="flex justify-between text-[11px] text-slate-600">
+                                    <span>${ev.evalName} (${ev.weight}%)</span>
+                                    <span class="font-bold ${ev.grade >= 4.0 ? 'text-slate-800' : 'text-uach-red'}">${ev.grade.toFixed(1)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // =========================================================
+        // FEATURE 2: PROFESSOR / ACADEMIC MANAGEMENT
+        // =========================================================
+
+        function renderProfessorView() {
+            renderActiveSectionsTable();
+            populateCourseGradeSelect();
+        }
+
+        function renderActiveSectionsTable() {
+            const tbody = document.getElementById('professor-sections-tbody');
+            const badge = document.getElementById('active-sections-badge');
+
+            badge.innerText = `${coursesDatabase.length} Secciones`;
+
+            tbody.innerHTML = coursesDatabase.map(sec => {
+                const fillPercentage = Math.round((sec.enrolled / sec.capacity) * 100);
+                let barColor = "bg-uach-green";
+                if (fillPercentage > 85) barColor = "bg-amber-500";
+                if (fillPercentage >= 100) barColor = "bg-uach-red";
+
+                return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-3 px-3">
+                            <strong class="font-bold text-slate-800 block">${sec.name}</strong>
+                            <span class="text-[10px] font-mono text-slate-500">${sec.code} &bull; ${sec.instructor}</span>
+                        </td>
+                        <td class="py-3 px-2">
+                            <span class="font-semibold text-slate-700 block">${sec.day} ${sec.timeSlot}</span>
+                            <span class="text-[10px] text-slate-500"><i class="fa-solid fa-location-dot text-uach-green"></i> ${sec.room}</span>
+                        </td>
+                        <td class="py-3 px-2">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div class="${barColor} h-full" style="width: ${Math.min(fillPercentage, 100)}%"></div>
+                                </div>
+                                <span class="text-[11px] font-bold text-slate-700">${sec.enrolled}/${sec.capacity} (${fillPercentage}%)</span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-2 text-center">
+                            <button onclick="deleteSection(${sec.id})" class="text-slate-400 hover:text-uach-red transition p-1" title="Eliminar Sección">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function populateCourseGradeSelect() {
+            const select = document.getElementById('grade-course-select');
+            select.innerHTML = coursesDatabase.map(c => `
+                <option value="${c.name}">${c.name} (${c.code})</option>
+            `).join('');
+        }
+
+        function handleCreateSection(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('sec-name').value.trim();
+            const code = document.getElementById('sec-code').value.trim();
+            const capacity = parseInt(document.getElementById('sec-capacity').value);
+            const day = document.getElementById('sec-day').value;
+            const timeSlot = document.getElementById('sec-slot').value;
+            const room = document.getElementById('sec-room').value.trim();
+
+            const newSection = {
+                id: Date.now(),
+                code,
+                name,
+                day,
+                timeSlot,
+                room,
+                enrolled: 0,
+                capacity,
+                instructor: "Docente UACh"
+            };
+
+            coursesDatabase.push(newSection);
+
+            // Reset form
+            document.getElementById('form-create-section').reset();
+
+            // Re-render both views for real-time synchronization
+            renderProfessorView();
+            renderStudentView();
+
+            showToast(`Sección ${code} creada exitosamente e integrada al catálogo de estudiantes.`, "success");
+        }
+
+        function deleteSection(secId) {
+            coursesDatabase = coursesDatabase.filter(c => c.id !== secId);
+            selectedCourseIds = selectedCourseIds.filter(id => id !== secId);
+
+            renderProfessorView();
+            renderStudentView();
+
+            showToast("Sección eliminada del sistema.", "info");
+        }
+
+        function handleUploadGrade(e) {
+            e.preventDefault();
+
+            const rut = document.getElementById('grade-rut').value.trim();
+            const courseName = document.getElementById('grade-course-select').value;
+            const evalName = document.getElementById('grade-eval-name').value.trim();
+            const weight = parseInt(document.getElementById('grade-weight').value);
+            const grade = parseFloat(document.getElementById('grade-val').value);
+
+            studentGradesStore.push({ rut, courseName, evalName, weight, grade });
+
+            // Reset eval input
+            document.getElementById('grade-eval-name').value = '';
+
+            // Update student grade lookup if visible
+            lookupStudentGrades();
+
+            showToast(`Nota ${grade.toFixed(1)} registrada para ${rut} en ${courseName}.`, "success");
+        }
+
+        // =========================================================
+        // UTILITY: TOAST NOTIFICATIONS
+        // =========================================================
+
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let bgClass = "bg-slate-900 text-white border-slate-700";
+            let icon = "fa-circle-info text-uach-blue";
+
+            if (type === "success") {
+                bgClass = "bg-uach-green text-white border-emerald-600";
+                icon = "fa-circle-check text-uach-yellow";
+            } else if (type === "error") {
+                bgClass = "bg-uach-red text-white border-red-800";
+                icon = "fa-circle-xmark text-white";
+            } else if (type === "warning") {
+                bgClass = "bg-amber-600 text-white border-amber-700";
+                icon = "fa-triangle-exclamation text-uach-yellow";
+            }
+
+            toast.className = `${bgClass} border p-3.5 rounded-xl shadow-xl flex items-center space-x-3 text-xs pointer-events-auto transition-all transform translate-y-2 opacity-0 duration-300`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-base shrink-0"></i>
+                <span class="flex-1 font-medium">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            // Auto dismiss
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
